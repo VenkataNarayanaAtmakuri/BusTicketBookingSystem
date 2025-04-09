@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        CONTAINER_NAME = 'bus-reservation-container'
-        IMAGE_NAME = 'bus-reservation'
-    }
-
     stages {
         stage('Clone') {
             steps {
@@ -16,15 +11,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build("${IMAGE_NAME}", "myproject")
-                }
-            }
-        }
-
-        stage('Stop Old Containers') {
-            steps {
-                script {
-                    bat "docker rm -f %CONTAINER_NAME% || exit 0"
+                    dockerImage = docker.build("bus-reservation", "myproject")
                 }
             }
         }
@@ -32,12 +19,7 @@ pipeline {
         stage('Run Container') {
             steps {
                 script {
-                    dockerImage.run(
-                        "--name ${CONTAINER_NAME} " +
-                        "-v ${env.WORKSPACE}\\myproject\\db.sqlite3:/app/db.sqlite3 " +
-                        "-p 8000:8000 " +
-                        "/bin/sh -c \"python manage.py migrate && python manage.py runserver 0.0.0.0:8000\""
-                    )
+                    dockerImage.run("-p 8000:8000")
                 }
             }
         }

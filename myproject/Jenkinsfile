@@ -1,21 +1,17 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_IMAGE = 'bus-reservation-app:latest'
-    }
-
     stages {
         stage('Clone') {
             steps {
-                git 'https://github.com/VENKY70325/bus-reservation-django.git'
+                git branch: 'main', url: 'https://github.com/VENKY70325/bus-reservation-django.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${DOCKER_IMAGE}")
+                    dockerImage = docker.build("bus-reservation")
                 }
             }
         }
@@ -23,7 +19,7 @@ pipeline {
         stage('Run Container') {
             steps {
                 script {
-                    docker.image("${DOCKER_IMAGE}").run('-p 8000:8000')
+                    dockerImage.run("-p 8000:8000")
                 }
             }
         }

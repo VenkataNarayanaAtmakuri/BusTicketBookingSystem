@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Clone') {
             steps {
-                git branch: 'main', url: 'https://github.com/VENKY70325/bus-reservation-django.git'
+                git branch: 'main', url: 'https://github.com/VenkataNarayanaAtmakuri/BusTicketBookingSystem.git'
             }
         }
 
